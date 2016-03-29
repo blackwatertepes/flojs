@@ -7,18 +7,25 @@ window.flo ||= {}
 
 class flo.Chart
   constructor: (@id) ->
+    @$canvas = $('#' + @id)
     @stage = new createjs.Stage(@id)
+    @bg = new createjs.Shape()
+    @fg = new createjs.MovieClip()
     @clear()
 
   clear: ->
     @stage.removeAllChildren()
     @nodes = []
     @edges = []
+    # A background is required to mouse events
+    @bg.graphics.beginFill('white').drawRect(0, 0, @$canvas.width(), @$canvas.height())
+    @stage.addChild(@bg)
+    @stage.addChild(@fg)
     @stage.update()
 
   addNode: (node) ->
     @nodes.push node
-    @stage.addChild(node.shape)
+    @fg.addChild(node.shape)
     @stage.update()
     node.shape.addEventListener("pressmove", @onDrag)
 
@@ -30,7 +37,7 @@ class flo.Chart
 
   addEdge: (edge) ->
     @edges.push edge
-    @stage.addChildAt(edge.shape, 0)
+    @fg.addChildAt(edge.shape, 0)
     @stage.update()
 
   getNode: (name) ->

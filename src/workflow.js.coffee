@@ -8,6 +8,8 @@ window.flo ||= {}
 class flo.Workflow extends flo.Chart
   constructor: (@id) ->
     super(@id)
+    @stage.on 'dblclick', (event) =>
+      @addNode new flo.Job('######', event.stageX, event.stageY)
 
   clear: ->
     @routes = []
@@ -35,7 +37,7 @@ class flo.Workflow extends flo.Chart
     nodes = JSON.parse(str)
     # Import nodes first
     for node in nodes
-      @addNode new flo.Node(node.name, node.x, node.y)
+      @addNode new flo.Job(node.name, node.x, node.y)
 
     # Import routes
     for node in nodes
