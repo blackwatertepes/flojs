@@ -28,7 +28,7 @@ class flo.Chart
     node.chart = @
     @fg.addChild(node.shape)
     @stage.update()
-    node.shape.on "pressmove", @onDrag
+    node.on 'pressmove', @onDrag
 
   onDrag: (event) =>
     event.currentTarget.x = event.stageX

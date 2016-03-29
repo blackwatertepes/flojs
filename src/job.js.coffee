@@ -3,7 +3,7 @@ window.flo ||= {}
 class flo.Job extends flo.Node
   constructor: (@name, @x, @y) ->
     super(@name, @x, @y)
-    @shape.on 'dblclick', @addPendingRoute
+    @on 'dblclick', @addPendingRoute
 
   addPendingRoute: (event) =>
     @pendingRoute = new flo.PendingRoute(@)

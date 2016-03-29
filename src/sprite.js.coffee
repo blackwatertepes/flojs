@@ -16,3 +16,6 @@ class flo.Sprite
 
   addChild: (child) ->
     @shape.addChild(child.shape)
+
+  on: (event, func) ->
+    @shape.on event, func
