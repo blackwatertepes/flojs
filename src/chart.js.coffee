@@ -25,9 +25,10 @@ class flo.Chart
 
   addNode: (node) ->
     @nodes.push node
+    node.chart = @
     @fg.addChild(node.shape)
     @stage.update()
-    node.shape.addEventListener("pressmove", @onDrag)
+    node.shape.on "pressmove", @onDrag
 
   onDrag: (event) =>
     event.currentTarget.x = event.stageX

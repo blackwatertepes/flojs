@@ -9,7 +9,10 @@ class flo.Sprite
     if @name
       @label = new flo.Label(@name)
       @shape.addChild(@label.shape)
-    @draw() if @draw
+    @draw()
+
+  draw: ->
+    @bg.graphics.clear()
 
   addChild: (child) ->
     @shape.addChild(child.shape)

@@ -2,11 +2,15 @@ window.flo ||= {}
 
 class flo.Node extends flo.Sprite
   constructor: (@name, @x, @y) ->
+    @chart = null
     super()
     @edges = []
-    @bg.graphics.beginStroke('black').beginFill('white').drawCircle(0, 0, 40)
     @shape.x = @x
     @shape.y = @y
+
+  draw: ->
+    super()
+    @bg.graphics.beginStroke('black').beginFill('white').drawCircle(0, 0, 40)
 
   addEdge: (edge) ->
     @edges.push edge
@@ -16,3 +20,9 @@ class flo.Node extends flo.Sprite
     @y = @shape.y
     for edge in @edges
       edge.draw()
+
+  highlight: ->
+    @bg.graphics.beginFill('#EEFFEE').drawCircle(0, 0, 39)
+
+  dehighlight: ->
+    @draw()

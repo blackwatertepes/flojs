@@ -1,6 +1,7 @@
 require './chart'
 require './gate'
 require './route'
+require './pending_route'
 require './job'
 
 window.flo ||= {}
@@ -8,8 +9,16 @@ window.flo ||= {}
 class flo.Workflow extends flo.Chart
   constructor: (@id) ->
     super(@id)
-    @stage.on 'dblclick', (event) =>
-      @addNode new flo.Job('######', event.stageX, event.stageY)
+    @bg.on 'dblclick', @dblclick
+    @fg.on 'pending_route_added', @pendingRouteAdded
+
+  pendingRouteAdded: (event)  =>
+    @pendingRoute = event.target._flo.pendingRoute
+    @highlightNodes()
+    @stage.update()
+
+  dblclick: (event) =>
+    @addNode new flo.Job('######', event.stageX, event.stageY)
 
   clear: ->
     @routes = []
@@ -21,6 +30,22 @@ class flo.Workflow extends flo.Chart
 
   addGate: (name, route) ->
     route.addGate(name)
+    @stage.update()
+
+  highlightNodes: ->
+    for node in @nodes
+      node.highlight()
+      node.shape.on 'click', @pendingRouteDefined, @, false, { nodeA: @pendingRoute.nodeA, nodeB: node }
+    @stage.update()
+
+  pendingRouteDefined: (event, nodes) ->
+    @dehighlightNodes()
+    @addRoute(new flo.Route(nodes.nodeA, nodes.nodeB))
+
+  dehighlightNodes: ->
+    for node in @nodes
+      node.dehighlight()
+      node.shape.off 'click'
     @stage.update()
 
   export: (nodes) =>
