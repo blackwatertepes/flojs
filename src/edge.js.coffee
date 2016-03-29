@@ -7,5 +7,5 @@ class flo.Edge extends flo.Sprite
     @nodeB.addEdge(@)
 
   draw: ->
-    @bg.graphics.clear()
+    super()
     @bg.graphics.beginStroke('black').moveTo(@nodeA.x, @nodeA.y).lineTo(@nodeB.x, @nodeB.y)
