@@ -6,13 +6,17 @@ class flo.Sprite
     @shape['_flo'] = @
     @bg = new createjs.Shape()
     @shape.addChild(@bg)
-    if @name
-      @label = new flo.Label(@name)
-      @shape.addChild(@label.shape)
+    @label = new flo.Label(@name)
+    @shape.addChild(@label.shape)
     @draw()
 
   draw: ->
     @bg.graphics.clear()
+    if @name
+      @label.text = @name
+      @label.draw()
+    if @shape.stage
+      @shape.stage.update()
 
   addChild: (child) ->
     @shape.addChild(child.shape)

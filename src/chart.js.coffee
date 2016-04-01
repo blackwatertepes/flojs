@@ -2,6 +2,7 @@ require './sprite'
 require './label'
 require './edge'
 require './node'
+require './arrow'
 
 window.flo ||= {}
 
@@ -26,8 +27,7 @@ class flo.Chart
   addNode: (node) ->
     @nodes.push node
     node.chart = @
-    @fg.addChild(node.shape)
-    @stage.update()
+    @addChild(node)
     node.on 'pressmove', @onDrag
 
   onDrag: (event) =>
@@ -39,6 +39,10 @@ class flo.Chart
   addEdge: (edge) ->
     @edges.push edge
     @fg.addChildAt(edge.shape, 0)
+    @stage.update()
+
+  addChild: (child) ->
+    @fg.addChild(child.shape)
     @stage.update()
 
   getNode: (name) ->

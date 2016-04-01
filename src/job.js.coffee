@@ -12,6 +12,10 @@ class flo.Job extends flo.Node
   addRoute: (route) ->
     @addEdge(route)
 
+  updateLabel: (label) ->
+    @name = label
+    @draw()
+
   routesTo: ->
     @edges.filter (route) =>
       route.nodeA == @

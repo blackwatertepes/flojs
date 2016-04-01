@@ -3,6 +3,7 @@ require './gate'
 require './route'
 require './pending_route'
 require './job'
+require './start'
 
 window.flo ||= {}
 
@@ -18,7 +19,14 @@ class flo.Workflow extends flo.Chart
     @stage.update()
 
   dblclick: (event) =>
-    @addNode new flo.Job('######', event.stageX, event.stageY)
+    @addBlankJob(event.stageX, event.stageY)
+
+  addBlankJob: (x, y) ->
+    job = new flo.Job('', x, y)
+    @addNode job
+    blankJobEvent = new createjs.Event('blank_job_added')
+    blankJobEvent['job'] = job
+    @stage.dispatchEvent(blankJobEvent)
 
   clear: ->
     @routes = []
@@ -40,7 +48,11 @@ class flo.Workflow extends flo.Chart
 
   pendingRouteDefined: (event, nodes) ->
     @dehighlightNodes()
-    @addRoute(new flo.Route(nodes.nodeA, nodes.nodeB))
+    route = new flo.Route(nodes.nodeA, nodes.nodeB)
+    @addRoute(route)
+    newRouteEvent = new createjs.Event('new_route_added')
+    newRouteEvent['route'] = route
+    @stage.dispatchEvent(newRouteEvent)
 
   dehighlightNodes: ->
     for node in @nodes
