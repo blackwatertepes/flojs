@@ -11,7 +11,7 @@ class flo.Node extends flo.Sprite
 
   draw: ->
     super()
-    @bg.graphics.beginStroke('black').beginFill('white').drawCircle(0, 0, @radius)
+    @bg.graphics.beginStroke('#2e6da4').beginFill('#337ab7').drawCircle(0, 0, @radius)
     if @shape.stage
       @shape.stage.update()
 

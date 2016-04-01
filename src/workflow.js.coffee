@@ -15,8 +15,8 @@ class flo.Workflow extends flo.Chart
     @setup()
 
   setup: ->
-    start = new flo.Start()
-    @addChild(start)
+    @start = new flo.Start()
+    @addChild(@start)
 
   pendingRouteAdded: (event)  =>
     @pendingRoute = event.target._flo.pendingRoute
@@ -84,7 +84,10 @@ class flo.Workflow extends flo.Chart
 
     # Import routes
     for node in nodes
+      console.log node
+      if node.start
+        @addRoute new flo.Route(@start, @getNode(node.name))
       for route in node.routes
-        routeObj = new flo.Route(@getNode(node.name), @getNode(route.node))
+        routeObj = new flo.Route(@getNode(node.name), @getNode(route.name))
         @addRoute routeObj
         @addGate route.gate, routeObj if route.gate

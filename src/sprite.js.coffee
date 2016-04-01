@@ -6,7 +6,7 @@ class flo.Sprite
     @shape['_flo'] = @
     @bg = new createjs.Shape()
     @shape.addChild(@bg)
-    @label = new flo.Label(@name)
+    @label = new flo.Label(@name, {font: "14px Arial", color: "#fff", align: "center"})
     @shape.addChild(@label.shape)
     @draw()
 

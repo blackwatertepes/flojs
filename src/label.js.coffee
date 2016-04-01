@@ -10,7 +10,7 @@ class flo.Label
     if @options.rotation
       @shape.rotation = @options.rotation
       @shape.x = 40
-      @shape.y = 10
+      @shape.y = -20
     if @options.align == 'center'
       @shape.x = @shape.getMeasuredWidth() / -2
       @shape.y = @shape.getMeasuredHeight() / -2

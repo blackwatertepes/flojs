@@ -3,7 +3,7 @@ window.flo ||= {}
 class flo.Gate extends flo.Sprite
   constructor: (@name, @route) ->
     super()
-    @bg.graphics.beginStroke('black').beginFill('white').drawCircle(0, 0, 20)
+    @bg.graphics.beginStroke('#4cae4c').beginFill('#5cb85c').drawCircle(0, 0, 20)
     @draw()
 
   draw: ->

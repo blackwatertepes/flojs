@@ -22,4 +22,4 @@ class flo.Edge extends flo.Sprite
   draw: ->
     super()
     @calc()
-    @bg.graphics.beginStroke('black').moveTo(@start.x, @start.y).lineTo(@end.x, @end.y)
+    @bg.graphics.setStrokeStyle(2).beginStroke('#666').moveTo(@start.x, @start.y).lineTo(@end.x, @end.y)
