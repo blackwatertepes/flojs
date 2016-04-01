@@ -12,6 +12,11 @@ class flo.Workflow extends flo.Chart
     super(@id)
     @bg.on 'dblclick', @dblclick
     @fg.on 'pending_route_added', @pendingRouteAdded
+    @setup()
+
+  setup: ->
+    start = new flo.Start()
+    @addChild(start)
 
   pendingRouteAdded: (event)  =>
     @pendingRoute = event.target._flo.pendingRoute
@@ -43,7 +48,7 @@ class flo.Workflow extends flo.Chart
   highlightNodes: ->
     for node in @nodes
       node.highlight()
-      node.shape.on 'click', @pendingRouteDefined, @, false, { nodeA: @pendingRoute.nodeA, nodeB: node }
+      node['listener'] = node.shape.on 'click', @pendingRouteDefined, @, false, { nodeA: @pendingRoute.nodeA, nodeB: node }
     @stage.update()
 
   pendingRouteDefined: (event, nodes) ->
@@ -57,7 +62,7 @@ class flo.Workflow extends flo.Chart
   dehighlightNodes: ->
     for node in @nodes
       node.dehighlight()
-      node.shape.off 'click'
+      node.shape.off 'click', node['listener']
     @stage.update()
 
   export: (nodes) =>
@@ -71,6 +76,7 @@ class flo.Workflow extends flo.Chart
 
   import: (str) ->
     @clear()
+    @setup()
     nodes = JSON.parse(str)
     # Import nodes first
     for node in nodes
