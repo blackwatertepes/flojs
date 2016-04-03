@@ -1,7 +1,7 @@
 module.exports = {
-  entry: "./src/workflow.js.coffee",
+  entry: "./src/chart.js.coffee",
   output: {
-    path: __dirname + '/../snorlax/webpack/projects',
+    path: __dirname + '/../flo_rails/vendor/assets/javascripts',
     filename: "flo.js"
   },
   resolve: {

@@ -1,25 +1,39 @@
 window.flo ||= {}
 
-class flo.Edge extends flo.Sprite
-  constructor: (@nodeA, @nodeB) ->
-    @NODE_OFFSET = 1.2
-    @calc()
-    super()
-    @nodeA.addEdge(@)
-    @nodeB.addEdge(@)
+Edge = (@nodeA, @nodeB) ->
+  @Container_constructor()
 
-  calc: ->
-    @start = {x: @nodeA.x, y: @nodeA.y}
-    @end = {x: @nodeB.x, y: @nodeB.y}
-    @distX = @end.x - @start.x
-    @distY = @end.y - @start.y
-    @dist = Math.sqrt(Math.pow(@distX, 2) + Math.pow(@distY, 2))
-    @start.x += @nodeA.radius / @dist * @distX * @NODE_OFFSET
-    @start.y += @nodeA.radius / @dist * @distY * @NODE_OFFSET
-    @end.x -= @nodeB.radius / @dist * @distX * @NODE_OFFSET
-    @end.y -= @nodeB.radius / @dist * @distY * @NODE_OFFSET
+  @nodeOffset = 1.2
+  @strokeColor = '#666'
 
-  draw: ->
-    super()
-    @calc()
-    @bg.graphics.setStrokeStyle(2).beginStroke('#666').moveTo(@start.x, @start.y).lineTo(@end.x, @end.y)
+  @nodeA.addEdge(@)
+  @nodeB.addEdge(@)
+
+  @bg = new createjs.Shape()
+  @addChild(@bg)
+
+  @update()
+  return
+
+p = createjs.extend(Edge, createjs.Container)
+
+p.setup = ->
+  @bg.graphics.clear()
+  @bg.graphics.setStrokeStyle(3).beginStroke(@strokeColor).moveTo(@nodeA.x, @nodeA.y).lineTo(@nodeB.x, @nodeB.y)
+
+p.update = ->
+  @distX = @nodeB.x - @nodeA.x
+  @distY = @nodeB.y - @nodeA.y
+  @dist = Math.sqrt(Math.pow(@distX, 2) + Math.pow(@distY, 2))
+  #TODO: Get start and end from the node
+  @start = {
+    x: @nodeA.x + @nodeA.radius / @dist * @distX * @nodeOffset
+    y: @nodeA.y + @nodeA.radius / @dist * @distY * @nodeOffset
+  }
+  @end = {
+    x: @nodeB.x - @nodeB.radius / @dist * @distX * @nodeOffset
+    y: @nodeB.y - @nodeB.radius / @dist * @distY * @nodeOffset
+  }
+  @setup()
+
+flo.Edge = createjs.promote(Edge, "Container")

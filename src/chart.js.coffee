@@ -1,50 +1,51 @@
-require './sprite'
-require './label'
-require './edge'
 require './node'
-require './arrow'
+require './circle'
+require './box'
+require './edge'
+require './route'
 
 window.flo ||= {}
 
-class flo.Chart
-  constructor: (@id) ->
-    @$canvas = $('#' + @id)
-    @stage = new createjs.Stage(@id)
-    # A background is required to mouse events
-    @bg = new createjs.Shape()
-    @bg.graphics.beginFill('white').drawRect(0, 0, @$canvas.width(), @$canvas.height())
-    @stage.addChild(@bg)
-    @fg = new createjs.MovieClip()
-    @stage.addChild(@fg)
-    @clear()
+Chart = (id) ->
+  @Stage_constructor(id)
 
-  clear: ->
-    @fg.removeAllChildren()
-    @nodes = []
-    @edges = []
-    @stage.update()
+  @$canvas = $('#' + id)
+  @width = @$canvas.width()
+  @height = @$canvas.height()
+  @nodes = []
+  @edges = []
 
-  addNode: (node) ->
-    @nodes.push node
-    node.chart = @
-    @addChild(node)
-    node.on 'pressmove', @onDrag
+  # A background is required for mouse events
+  @bg = new createjs.Shape()
+  @bg.graphics.beginFill('white').drawRect(0, 0, @width, @height)
+  @addChild(@bg)
 
-  onDrag: (event) =>
-    event.currentTarget.x = event.stageX
-    event.currentTarget.y = event.stageY
-    event.currentTarget._flo.update()
-    @stage.update()
+  return
 
-  addEdge: (edge) ->
-    @edges.push edge
-    @fg.addChildAt(edge.shape, 0)
-    @stage.update()
+p = createjs.extend(Chart, createjs.Stage)
 
-  addChild: (child) ->
-    @fg.addChild(child.shape)
-    @stage.update()
+p.addChild = (child) ->
+  #TODO: Add chart ref
+  @Stage_addChild(child)
 
-  getNode: (name) ->
-    @nodes.find (node) ->
-      node.name == name
+p.addNode = (node) ->
+  @nodes.push node
+  @addChild(node)
+  node.on 'pressmove', @onDrag
+  node.on 'dblclick', @onDblClick
+
+p.addEdge = (edge) ->
+  @edges.push edge
+  @addChild(edge)
+
+# Listeners
+p.onDblClick = (event) ->
+  event.currentTarget.toggle()
+  @update()
+
+p.onDrag = (event) =>
+  event.currentTarget.x = event.stageX
+  event.currentTarget.y = event.stageY
+  event.currentTarget.update()
+
+flo.Chart = createjs.promote(Chart, "Stage")

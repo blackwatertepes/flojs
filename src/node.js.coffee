@@ -1,31 +1,42 @@
 window.flo ||= {}
 
-class flo.Node extends flo.Sprite
-  constructor: (@name, @x, @y) ->
-    @chart = null
-    @radius = 40
-    super()
-    @edges = []
-    @shape.x = @x
-    @shape.y = @y
+Node = (attrs={}) ->
+  @Container_constructor()
 
-  draw: ->
-    super()
-    @bg.graphics.beginStroke('#2e6da4').beginFill('#337ab7').drawCircle(0, 0, @radius)
-    if @shape.stage
-      @shape.stage.update()
+  @strokeColor = '#2e6da4'
+  @fillColor = '#337ab7'
+  @activeColor = '#49e'
+  @radius = 30
+  @active = false
+  @edges = []
 
-  addEdge: (edge) ->
-    @edges.push edge
+  for key, val of attrs
+    @[key] = val
 
-  update: ->
-    @x = @shape.x
-    @y = @shape.y
-    for edge in @edges
-      edge.draw()
+  @bg = new createjs.Shape()
+  @addChild(@bg)
 
-  highlight: ->
-    @bg.graphics.beginFill('#EEFFEE').drawCircle(0, 0, 39)
+  @setup()
+  return
 
-  dehighlight: ->
-    @draw()
+p = createjs.extend(Node, createjs.Container)
+
+p.setup = ->
+  @bg.graphics.clear()
+  if @active
+    @bg.graphics.beginStroke(@strokeColor).beginFill(@activeColor).drawCircle(0, 0, @radius)
+  else
+    @bg.graphics.beginStroke(@strokeColor).beginFill(@fillColor).drawCircle(0, 0, @radius)
+
+p.toggle = ->
+  @active = !@active
+  @setup()
+
+p.addEdge = (edge) ->
+  @edges.push edge
+
+p.update = ->
+  for edge in @edges
+    edge.update()
+
+flo.Node = createjs.promote(Node, "Container")
